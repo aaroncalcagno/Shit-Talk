@@ -1,3 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Shit Talk">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffe8d3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#24150c" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{box-sizing:border-box;height:100%}body{margin:0;font-size:14px;height:100%}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Shit Talk</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700;800&display=swap">
@@ -181,9 +195,41 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;p
   padding:11px 18px;border-radius:99px;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:toast 2.6s var(--spring) both;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-30px)}12%,85%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-20px)}}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:50;width:100%;height:100%}
+/* iPhone polish */
+*{-webkit-tap-highlight-color:transparent}
+button,label,.card{touch-action:manipulation}
+.card{touch-action:none}
+body{overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%}
+input{-webkit-user-select:text;user-select:text}
+canvas,img{-webkit-touch-callout:none}
+.compose input{font-size:16px}
+.tabbar{transition:transform .45s var(--spring)}
+body.chatting .tabbar{transform:translate(-50%,160%)}
+body.chatting .view{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.scroll{padding-bottom:4px}
+@media (max-height:780px){
+  header{padding:2px 2px 8px}
+  .logo{font-size:1.85rem}
+  .sub{display:none}
+  .view{gap:10px;padding-bottom:90px}
+  .deck{min-height:0}
+  .nm{font-size:1.7rem}.nm small{font-size:1.05rem}
+  .info{padding:14px 16px 16px;gap:7px}
+  .bio{font-size:.86rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .info .tags:last-child{display:none}
+  .ab.pass{width:54px;height:54px}.ab.sup{width:44px;height:44px}.ab.like{width:62px;height:62px}
+  .drop{aspect-ratio:4/3}
+}
+@media (max-height:640px){
+  .info .nm + .tags .tag:not(.gold){display:none}
+  .bio{-webkit-line-clamp:2}
+  .tb{padding:6px 0 4px}
+}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 
+</head>
+<body>
 <div class="app">
   <header>
     <div>
@@ -359,7 +405,7 @@ function toast(t){document.querySelectorAll(".toast").forEach(x=>x.remove());con
 
 /* ---------- Discover ---------- */
 const view=$("#view");
-function freshView(){const v=V.cloneNode(false);V.replaceWith(v);return v}
+function freshView(){document.body.classList.remove("chatting");const v=V.cloneNode(false);V.replaceWith(v);return v}
 let V=view;
 function renderSwipe(){
   V=freshView();$("#sub").textContent="Find someone who gives a shit";
@@ -515,7 +561,7 @@ function renderMatches(){
   V.appendChild(s);
 }
 function renderChat(m){
-  $("#sub").textContent="Keep it classy. Or don't.";
+  document.body.classList.add("chatting");$("#sub").textContent="Keep it classy. Or don't.";
   const w=el(`<div style="display:flex;flex-direction:column;gap:10px;flex:1;min-height:0">
     <div class="chathead"><button class="back" aria-label="Back to matches"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div><b style="font-size:1.05rem">${esc(m.p.n)}</b><div style="font-size:.78rem;color:var(--muted)">Type ${m.p.t} · ${BRISTOL[m.p.t][0]}</div></div></div>
     <div class="msgs" id="msgs"></div>
@@ -544,3 +590,6 @@ $("#t-matches").onclick=()=>{openChat=null;setTab("matches")};
 $("#pill").onclick=()=>setTab("drop");
 updPill();renderSwipe();
 </script>
+
+</body>
+</html>
